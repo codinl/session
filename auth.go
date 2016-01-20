@@ -26,14 +26,14 @@ func LoginRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	logger.Debug("LoginRequired")
 	if !user.IsAuthenticated() {
 		path := fmt.Sprintf("%s?%s=%s", RedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, 302)
+		http.Redirect(resp, req, path, http.StatusUnauthorized)
 	}
 }
 
 func AdminRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	if !user.IsAuthenticated() || !user.IsAdmin() {
 		path := fmt.Sprintf("%s?%s=%s", AdminRedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, 302)
+		http.Redirect(resp, req, path, http.StatusUnauthorized)
 	}
 }
 
