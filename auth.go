@@ -2,7 +2,6 @@ package session
 
 import (
 	"fmt"
-	"github.com/codinl/go-logger"
 	"net/http"
 )
 
@@ -34,22 +33,4 @@ func AdminRequired(user User, req *http.Request, resp http.ResponseWriter) {
 		path := fmt.Sprintf("%s?%s=%s", AdminRedirectUrl, RedirectParam, req.URL.Path)
 		http.Redirect(resp, req, path, http.StatusFound)
 	}
-}
-
-func Login(s Session, user User) error {
-	err := user.Login()
-	if err != nil {
-		logger.Error(err)
-		return err
-	}
-	s.Set(SESSION_USER, user)
-	return nil
-}
-
-func Logout(s Session, user User) error {
-	if err := user.Logout(); err != nil {
-		return err
-	}
-	s.Delete(SESSION_USER)
-	return nil
 }

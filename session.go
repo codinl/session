@@ -127,6 +127,8 @@ type Session interface {
 	Set(key string, value interface{})
 	Get(key string) (value interface{}, found bool)
 	Delete(key string)
+	Authenticate(user User) error
+	UnAuthenticate() error
 }
 
 // Session stores the values and optional configuration for a session.
@@ -170,4 +172,14 @@ func (s *session) Delete(key string) {
 	defer s.mutex.Unlock()
 
 	delete(s.data, key)
+}
+
+func (s *session) Authenticate(user User) error {
+	s.Set(SESSION_USER, user)
+	return nil
+}
+
+func (s *session) UnAuthenticate() error {
+	s.Delete(SESSION_USER)
+	return nil
 }
