@@ -140,7 +140,6 @@ type session struct {
 }
 
 func NewSession(req *http.Request, resp http.ResponseWriter, sid string) Session {
-	logger.Debug("--------NewSession()")
 	return &session{
 		Req:  req,
 		Resp: resp,

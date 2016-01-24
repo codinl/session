@@ -23,7 +23,6 @@ type User interface {
 }
 
 func LoginRequired(user User, req *http.Request, resp http.ResponseWriter) {
-	logger.Debug("LoginRequired")
 	if !user.IsAuthenticated() {
 		path := fmt.Sprintf("%s?%s=%s", RedirectUrl, RedirectParam, req.URL.Path)
 		http.Redirect(resp, req, path, http.StatusUnauthorized)
@@ -37,12 +36,20 @@ func AdminRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	}
 }
 
-func Authenticate(s Session, user User) error {
+func Login(s Session, user User) error {
 	err := user.Login()
 	if err != nil {
 		logger.Error(err)
 		return err
 	}
 	s.Set(SESSION_USER, user)
+	return nil
+}
+
+func Logout(s Session, user User) error {
+	if err := user.Logout(); err != nil {
+		return err
+	}
+	s.Delete(SESSION_USER)
 	return nil
 }
