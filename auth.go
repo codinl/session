@@ -25,14 +25,14 @@ type User interface {
 func LoginRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	if !user.IsAuthenticated() {
 		path := fmt.Sprintf("%s?%s=%s", RedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, http.StatusUnauthorized)
+		http.Redirect(resp, req, path, http.StatusFound)
 	}
 }
 
 func AdminRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	if !user.IsAuthenticated() || !user.IsAdmin() {
 		path := fmt.Sprintf("%s?%s=%s", AdminRedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, http.StatusUnauthorized)
+		http.Redirect(resp, req, path, http.StatusFound)
 	}
 }
 
