@@ -1,7 +1,6 @@
 package session
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -13,24 +12,26 @@ var (
 
 // User
 type User interface {
-	Login() error
-	Logout() error
+	Login() int
+	Logout() int
 	IsAdmin() bool
 	IsAuthenticated() bool
 	UniqueId() interface{}
-	GetById(id interface{}) (User, error)
+	GetById(id interface{}) (User, int)
 }
 
 func LoginRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	if !user.IsAuthenticated() {
-		path := fmt.Sprintf("%s?%s=%s", RedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, http.StatusFound)
+		//path := fmt.Sprintf("%s?%s=%s", RedirectUrl, RedirectParam, req.URL.Path)
+		//http.Redirect(resp, req, path, http.StatusFound)
+		http.Error(resp, "", http.StatusUnauthorized)
 	}
 }
 
 func AdminRequired(user User, req *http.Request, resp http.ResponseWriter) {
 	if !user.IsAuthenticated() || !user.IsAdmin() {
-		path := fmt.Sprintf("%s?%s=%s", AdminRedirectUrl, RedirectParam, req.URL.Path)
-		http.Redirect(resp, req, path, http.StatusFound)
+		//path := fmt.Sprintf("%s?%s=%s", AdminRedirectUrl, RedirectParam, req.URL.Path)
+		//http.Redirect(resp, req, path, http.StatusFound)
+		http.Error(resp, "", http.StatusUnauthorized)
 	}
 }
